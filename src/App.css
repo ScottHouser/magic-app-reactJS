@@ -57,6 +57,7 @@
     width:1000px;
     margin-bottom:8px;
     margin-top:8px;
+    background-color:white;
 }
 
 #sell_div{
@@ -122,20 +123,25 @@ h6{
 }
 
 #select_set_text{
-     border-bottom: 2px solid #6ad5e8;
+/*     border-bottom: 2px solid #6ad5e8;*/
+     color:#6ad5e8;
+}
+#exampleModalLabel{
+     margin-left:170px;
+     color:#6ad5e8;
 }
 #modal_foot_div{
     width:100%;
-    padding-top:20px;
+/*    padding-top:20px;*/
      margin-top:0px;
-    border-top: 0px solid #bec4ce; 
+/*    border-top: 0px solid #bec4ce; */
      
 }
 #modal_foot_test_div{
     width:100%;
     
      padding-top:10px;
-     border-top: 2px solid #6ad5e8;
+/*     border-top: 2px solid #6ad5e8;*/
 }
 
 #check_box{
@@ -182,18 +188,27 @@ h6{
 }
 
 .unselected{
-    fill:#ef1f56;
+/*    fill:#ef1f56;*/
     stroke:black;
     stroke-width:0;
     opacity:0.5;
+    fill:'url(#gradOne)';
 }
-
+#delete_modal{
+    float:right;
+    background-color:#ff9999;
+    border-color:#ff9999;
+}
+#sell_button2,#test_sell{
+    background-color:#6ad5e8;
+    border-color:#6ad5e8;
+}
 
 .selected{
 /*    animation: selectedAnimation .1s infinite;*/
     stroke-width:0;
     transform-origin: 50% 50%;
-    fill:#4ef47d;
+    fill:#6ad5e8;
     opacity:0.5;
             }
 #seach_span2,#seach_span{
@@ -201,10 +216,32 @@ h6{
             border-color:#6ad5e8; 
             border-width:2px;
             }
-#seach_span3,#seach_span4,#seach_span5,#modal_name_div,#modal_quant_div,#modal_price_div,#modal_pic_url,.modal-header{
-/*            background-color:#6ad5e8;*/
+#seach_span3,#seach_span4,#seach_span5,#modal_name_div,#modal_quant_div,#modal_price_div,#modal_pic_url{
+            background-color:white;
             border-color:#6ad5e8; 
+            
             }
+            .modal-header{
+                background-color: #edeff2;
+            }
+            
+            #modal_body_id{
+/*                box-shadow: inset 0 0 0 15px #edeff2*/
+                   
+                   
+            }
+            #modal_name_div{
+/*                background-color:#edeff2;*/
+            }
+            #seach_span3,#seach_span4,#seach_span5{
+               
+            }
+            #seach_span{
+               
+                background-color:white;
+            }
+            
+            
             
 @keyframes selectedAnimation{
    0%{
