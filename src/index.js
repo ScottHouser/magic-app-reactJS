@@ -5,14 +5,8 @@ import './index.css';
 import axios from 'axios';
 
 var configs = require('./config.js');
-        //import testit2 from './config.js';
-        
-console.log(configs.default.asdf);
-
-
-        //const test = < h1 > test < /h1>;
+ 
 const cardSearchAuto = [];
-
 
 //-----------------------------------------------------------------------------searchbar
 //This search bar sends api to return atocomplete 
@@ -89,7 +83,7 @@ class BigCard extends React.Component {
                 //listRadio = response2.data.data.map((card) => <CardSetDiv setsFull={card.set_name} sets={card.set.toUpperCase()}/ > );  
                 theSVG = <SVGmaker setlist={response2.data.data}/>
                    
-                ReactDOM.render(<InputNameDiv svg={theSVG} listRadioStuff={listRadio} setlist={response2.data.data} name={response.data.name}/>,document.getElementById('test_div'));
+                ReactDOM.render(<BigModal svg={theSVG} listRadioStuff={listRadio} setlist={response2.data.data} name={response.data.name}/>,document.getElementById('test_div'));
            
                 ReactDOM.render(<BigButton2 CardData={response.data}/>,document.getElementById('right_app_div'));
            
@@ -158,7 +152,7 @@ class BigButtonShortenURL extends React.Component {
       
       //var params = {data: '{"longUrl":"'+googURL+'"}',contentType: 'application/json'};
       
-      axios.post('https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyCVHqmoP280py605KPBGz2PGbeRpf8Tmjs', 
+      axios.post('https://www.googleapis.com/urlshortener/v1/url?key='+configs.default.googleApiAuth, 
       {"longUrl": googURL}).then(function (response) {
             
             document.getElementById('modal_pic_url').value=response.data.id;
@@ -181,7 +175,7 @@ class BigButtonShortenURL extends React.Component {
 }
 
 //This component handles all the sales form related code
-class InputNameDiv extends React.Component {
+class BigModal extends React.Component {
   constructor(props) {
     super(props);
  
@@ -199,49 +193,9 @@ class InputNameDiv extends React.Component {
     this.cardFinal='';
     
     this.state = {value: '', name:this.props.name, quant:'', price:'',pic:'',set:'',foil:false,nm:false,final:''};
-   
-    this.circs2=this.giveMeMyFuckingCircles(this.props.setlist);
-        
-    
-   
-    
-  }
-  //I dont think I jsue this
-  giveMeMyFuckingCircles(sets){
-      var circX=0;
-      var circY=40;
-      var theCircs=[]
-      
-      sets.forEach(function(set,i) {
-          if(i%4!==0||i===0){
-            circX=circX+70;
-            circY=circY+0;
-        }else{
-           circX=circX-210;
-            circY=circY+65; 
-        }  
-        
-              var circXstring=String(circX);
-              var circYstring=String(circY);
-              var textstartPointY=String(circY+30);
-              var textstartPointX=String(circX+30);
-              var addACirc=(
-                      <g>
-                <rect width='60px' height='50px' filter="url(#f1)" fill="#6ad5e8" x={circXstring} y={circYstring} r="30" stroke="#6c93d1" strokeWidth="0">
-                </rect>
-                <text x={textstartPointX} y={textstartPointY} textAnchor="middle" stroke="#111111" strokeWidth="2px" >{set.set.toUpperCase()}</text>
   
-                
-                </g>
-                );
-            theCircs.push(addACirc);
-            
-            
-            
-      });
-      
-      return(theCircs);
   }
+  
 
   handleClick(e) {
       this.setState({pic:document.getElementById('modal_pic_url').value});
@@ -255,8 +209,10 @@ class InputNameDiv extends React.Component {
       }
      
       if(e.target.id==='sell_button2'){
-          console.log('this will be the sell function')
-          // add the handle submit shit here
+          
+          this.cardPic=document.getElementById('modal_pic_url').value;
+          
+          this.sellTheCard();
       }
   }
   
@@ -269,14 +225,13 @@ class InputNameDiv extends React.Component {
         if(element.tagName==='g'){
             if(element.childNodes[0].getAttribute('class')==='selected'){
                
-                console.log(element.childNodes[0].getAttribute('data-internalset'));
+                
                 selectedSet=element.childNodes[0].getAttribute('data-internalset');
                 
             }else{
                 
             }
-            
-           
+ 
         };
       });
       
@@ -286,8 +241,7 @@ class InputNameDiv extends React.Component {
   }
 //  
   handleChange(event) {
-      //this.state.value= document.getElementById('modal_discription_div').value;
-      //this.final=document.getElementById('modal_discription_div').value +this.props.name;
+     
       this.setState({value: event.target.value});
       
       if(event.target.id==='modal_quant_div'){
@@ -303,7 +257,7 @@ class InputNameDiv extends React.Component {
       }else if(event.target.id==='modal_price_div'){
           this.setState({price: event.target.value});
           this.cardPrice=event.target.value;
-          console.log(this.cardPrice);
+          
           
       }else if(event.target.id==='modal_pic_url'){
           this.setState({pic: event.target.value});
@@ -343,29 +297,30 @@ class InputNameDiv extends React.Component {
     var condition = this.state.nm ? "NM" : '';
     var condition2 = this.cardNM ? "NM" : '';
 
-    //var checkedSet = ($("#set_radio_form input[type='radio']:checked"));
-
-    //setName = checkedSet[0].getAttribute('datasetname');
-    //setAbr = checkedSet[0].getAttribute('datasetabr');
-
     var outputString = cardName + " " + quantity +" "+ foil + " MTG Magic the Gathering\n" + setName + " " + " \n " + condition + " Free shipping!";
     var otherOutputString= this.cardName + " " + this.cardQuant +" "+ foil2 + " MTG Magic the Gathering " +this.cardSet +" /n "+condition2+" Free shipping!";
     
     this.cardFinal=otherOutputString;
     this.setState({final:outputString});
     
-    window.alert(otherOutputString);
+    //window.alert(otherOutputString);
       
   }
   
-  //perhaps this should be differnt function in on click
-  handleSubmit(event) {
+
+  sellTheCard() {
     //this will be working api
     var data=this.sell();  
-    alert(this.state);
+   
     event.preventDefault();
     
-    
+    if(this.cardPrice==='' || this.cardPic==='' || this.cardSet==='' || this.cardPic===''){
+       
+        alert('missing information');
+        return;
+        
+    }else{
+        
     axios({
         method: 'post',
         url: 'https://api.ebay.com/ws/api.dll',
@@ -374,7 +329,7 @@ class InputNameDiv extends React.Component {
                 'X-EBAY-API-CALL-NAME': 'AddItem',
                 'X-EBAY-API-SITEID': '0',
                 'X-EBAY-API-DETAIL-LEVEL': 0,
-                'X-EBAY-API-IAF-TOKEN':'AgAAAA**AQAAAA**aAAAAA**Y5ExWg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFmYqoC5mAow+dj6x9nY+seQ**4f4DAA**AAMAAA**aloOJiTqs+eJfiI0TmWCHXLFsfPkd0eRThFQ+f+Fjj+6oLDl6m3B/3IlwjX0+/1nHJu4HnwVwWS3pmlusXMY4Dwq4VoBGAzFar42TFSCMZcR/TrD3h8fzMOL2EQCDyqGHnhzoHQoMptrY4h2mDhokOxG49k6VbtHCu6VVElyYIBrmxamcCQsA4YSNbLX65rTm1KSEs73euaDsnN6rBGnsk3mLU71VZ+gCuaOsGsP4mloK8VYiDhoq0ealgeBZyVgUjFXma924oAdx+yNtEp0KtaJAy18NDZ8jqLLucGNKtUGLzcw+Ibu3e5qFKeoawH0ab0Qw7JzKSRlHR4PNHQwIdmzVY3EN9ffMPlcjAmBvY31qPGYR4Ssj5IcfplIRqjUdhaamSJCebSCT/AUMOOj6dTlVh1nHrlMiqL/hzUu3apCafJ9oJme0yX9o00wtGgvIUO8kJeHPbi9TQOsQS0bsNV0ZWbPPBTVGMgAtepdAtRtQfdjLRBTCzKFFFa1jDNC1i6F8Vec3/ne5muNzhNPC2QWP580TRAIsDoExeIIpwcJFeWXEIafBzAsJjpObST47yqk7Xy5dlAHnS90zwOB+2QZpRKPl05CSkO/+JXkgz5Jsnlc3gNaxZvYFB3rynClBtInp9G+H8tXeQWjH5v5IE/U8d0eUdN9lhjDg4795teB+8PNc0jvIIyJ8xpAV8Q8jjcNf2IByQX3iNQj5/XdeHgxdDdsb0zmfNmQAPwlXkp0J8ze92/GB6BBp1iTMoBx'
+                'X-EBAY-API-IAF-TOKEN': configs.default.ebayAuth
             },
             data: data
             }).then(function(response){
@@ -382,7 +337,7 @@ class InputNameDiv extends React.Component {
                       console.log(response);                 
           
             });
-    
+    }
   }
   sell(){
       
@@ -390,7 +345,7 @@ class InputNameDiv extends React.Component {
         var ebayJson = '<?xml version="1.0" encoding="utf-8"?>' +
                 '<AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">' +
                 '<RequesterCredentials>' +
-                '<eBayAuthToken>x</eBayAuthToken>' +
+                '<eBayAuthToken>' + configs.default.ebayAuth + '</eBayAuthToken>' +
                 '</RequesterCredentials>' +
                 '<ErrorLanguage>en_US</ErrorLanguage>' +
                 '<WarningLevel>High</WarningLevel>' +
@@ -452,14 +407,7 @@ class InputNameDiv extends React.Component {
     
     return (
         <div>
-         <div id='test_this_div' >
-        <center>
-        <h4 id='select_set_text'>SELECT A SET</h4>
-        </center>
-        <div id='test_wrap'>
-        {this.props.svg}
-        </div>
-        </div>
+         
         
         <div className="input-group">
             <span className="input-group-addon form_lables" id="seach_span3"><strong>Name</strong></span>
@@ -485,12 +433,21 @@ class InputNameDiv extends React.Component {
 
         <div id='check_box' className="form-check no_pad">
         <input onChange={this.handleChange}  type="checkbox" className="form-check-input no_pad" id="foil_check"></input>
-        <label className="form-check-label" >Foil</label>
+        <label className="form-check-label" ><strong>Foil</strong></label>
         </div>
 
         <div id='check_box2' className="form-check no_pad">
         <input onChange={this.handleChange}  type="checkbox" className="form-check-input no_pad" id="nm_check"></input>
-        <label className="form-check-label" >Near Mint</label>
+        <label className="form-check-label" ><strong>Near Mint</strong></label>
+        </div>
+        
+        <div id='test_this_div' >
+        <center>
+        <h4 id='select_set_text'><strong>SELECT A SET</strong></h4>
+        </center>
+        <div id='test_wrap'>
+        {this.props.svg}
+        </div>
         </div>
 
         <div id='modal_foot_div' className="modal-footer">
@@ -520,9 +477,9 @@ class SVGmaker extends React.Component {
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
-    this.circs=this.giveMeMyFuckingCircles(this.props.setlist,this.handleClick,this.svgClass);
+    this.circs=this.giveMeMyCircles(this.props.setlist,this.handleClick,this.svgClass);
   }
-  giveMeMyFuckingCircles(sets,clickFun,thisSvg){
+  giveMeMyCircles(sets,clickFun,thisSvg){
       
       var circX=30;
       var circY=10;
@@ -545,7 +502,7 @@ class SVGmaker extends React.Component {
       }
       
       sets.forEach(function(set,i) {
-         console.log(set.set.toUpperCase()+" "+set.set_name);
+         
          
           if(i%4!==0||i===0){
             circX=circX+70;
@@ -613,11 +570,11 @@ class SVGmaker extends React.Component {
 
   render() {
     return (
-    <svg class={this.svgHeight} id='set_svg'>
+    <svg className={this.svgHeight} id='set_svg'>
       <defs>
                 <linearGradient id="gradOne" x1="0%" y1="0%" x2="65%" y2="35%">
-                    <stop stop-color="#b30000" stop-opacity="0.75" offset="0%">  </stop>
-                    <stop stop-color="#b30000" stop-opacity="0.25" offset="100%">  </stop>
+                    <stop stopColor="#b30000" stopOpacity="0.75" offset="0%">  </stop>
+                    <stop stopColor="#b30000" stopOpacity="0.25" offset="100%">  </stop>
                 </linearGradient>
                 
                 
@@ -636,176 +593,3 @@ class SVGmaker extends React.Component {
 }
 
 
-//useless?
-
-//--------------------------------------------------------------for testing the api
-class TestApi extends React.Component {
-  constructor(props) {
-    super(props);
-    
-    this.asdf='asdfd'
-    this.state = {isToggleOn: true};
-    
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    
-  }
-   sell2(){
-      
-      var makeEbayCallJson2 = function () {
-        var ebayJson2= '<?xml version="1.0" encoding="utf-8"?>' +
-                '<AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">' +
-                '<RequesterCredentials>' +
-                '<eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**Y5ExWg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFmYqoC5mAow+dj6x9nY+seQ**4f4DAA**AAMAAA**aloOJiTqs+eJfiI0TmWCHXLFsfPkd0eRThFQ+f+Fjj+6oLDl6m3B/3IlwjX0+/1nHJu4HnwVwWS3pmlusXMY4Dwq4VoBGAzFar42TFSCMZcR/TrD3h8fzMOL2EQCDyqGHnhzoHQoMptrY4h2mDhokOxG49k6VbtHCu6VVElyYIBrmxamcCQsA4YSNbLX65rTm1KSEs73euaDsnN6rBGnsk3mLU71VZ+gCuaOsGsP4mloK8VYiDhoq0ealgeBZyVgUjFXma924oAdx+yNtEp0KtaJAy18NDZ8jqLLucGNKtUGLzcw+Ibu3e5qFKeoawH0ab0Qw7JzKSRlHR4PNHQwIdmzVY3EN9ffMPlcjAmBvY31qPGYR4Ssj5IcfplIRqjUdhaamSJCebSCT/AUMOOj6dTlVh1nHrlMiqL/hzUu3apCafJ9oJme0yX9o00wtGgvIUO8kJeHPbi9TQOsQS0bsNV0ZWbPPBTVGMgAtepdAtRtQfdjLRBTCzKFFFa1jDNC1i6F8Vec3/ne5muNzhNPC2QWP580TRAIsDoExeIIpwcJFeWXEIafBzAsJjpObST47yqk7Xy5dlAHnS90zwOB+2QZpRKPl05CSkO/+JXkgz5Jsnlc3gNaxZvYFB3rynClBtInp9G+H8tXeQWjH5v5IE/U8d0eUdN9lhjDg4795teB+8PNc0jvIIyJ8xpAV8Q8jjcNf2IByQX3iNQj5/XdeHgxdDdsb0zmfNmQAPwlXkp0J8ze92/GB6BBp1iTMoBx</eBayAuthToken>' +
-                '</RequesterCredentials>' +
-                '<ErrorLanguage>en_US</ErrorLanguage>' +
-                '<WarningLevel>High</WarningLevel>' +
-                '<Item>' +
-                '<CategoryMappingAllowed>true</CategoryMappingAllowed>' +
-                '<ConditionID>' + '1000' + '</ConditionID>' +
-                '<Country>US</Country>' +
-                '<Currency>USD</Currency>' +
-                '<Description>' + 'card description' + '</Description>' +
-                '<DispatchTimeMax>2</DispatchTimeMax>' +
-                '<ListingDuration>Days_30</ListingDuration>' +
-                '<ListingType>FixedPriceItem</ListingType>' +
-                '<PaymentMethods>PayPal</PaymentMethods>' +
-                '<PayPalEmailAddress>bulseye1111@gmail.com</PayPalEmailAddress>' +
-                '<PictureDetails>' +
-                '<PictureURL>' + 'https://goo.gl/ZH3Fn6' + '</PictureURL>' +
-                '</PictureDetails>' +
-                '<PostalCode>73013</PostalCode>' +
-                '<PrimaryCategory>' +
-                '<CategoryID>' + '49181' + '</CategoryID>' +
-                '</PrimaryCategory>' +
-                '<Quantity>1</Quantity>' +
-                '<ReturnPolicy>' +
-                '<ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption>' +
-                '<RefundOption>MoneyBack</RefundOption>' +
-                '<ReturnsWithinOption>Days_30</ReturnsWithinOption>' +
-                '<Description>If the card or cards are damaged or counterfeited, please message me or open a return through ebay and I will refund you as soon as possible.</Description>' +
-                '<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' +
-                '</ReturnPolicy>' +
-                '<ShippingDetails>' +
-                '<ShippingType>Flat</ShippingType>' +
-                '<ShippingServiceOptions>' +
-                '<FreeShipping>1</FreeShipping>' +
-                '<ShippingService>ShippingMethodStandard</ShippingService>' +
-                '</ShippingServiceOptions>' +
-                '</ShippingDetails>' +
-                '<Site>US</Site>' +
-                '<StartPrice>' + '20' + '</StartPrice>' +
-                '<Title>' + 'this is the title' + '</Title>' +
-                '</Item>' +
-                '<Version>1019</Version>' +
-                '</AddItemRequest>'
-
-
-        return ebayJson2;
-
-    };
-    
-    return makeEbayCallJson2();
-      
-  }
-
-  handleClick() {
-      
-      this.setState(prevState => ({
-      isToggleOn: !prevState.isToggleOn
-    }));
-    
-     console.log(this.sell2());
-      var data=this.sell2();
-      
-      axios({
-        method: 'post',
-        url: 'https://api.ebay.com/ws/api.dll',
-            headers:{
-                'X-EBAY-API-COMPATIBILITY-LEVEL': '1019',
-                'X-EBAY-API-CALL-NAME': 'AddItem',
-                'X-EBAY-API-SITEID': '0',
-                'X-EBAY-API-DETAIL-LEVEL': 0,
-                'X-EBAY-API-IAF-TOKEN':'AgAAAA**AQAAAA**aAAAAA**Y5ExWg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFmYqoC5mAow+dj6x9nY+seQ**4f4DAA**AAMAAA**aloOJiTqs+eJfiI0TmWCHXLFsfPkd0eRThFQ+f+Fjj+6oLDl6m3B/3IlwjX0+/1nHJu4HnwVwWS3pmlusXMY4Dwq4VoBGAzFar42TFSCMZcR/TrD3h8fzMOL2EQCDyqGHnhzoHQoMptrY4h2mDhokOxG49k6VbtHCu6VVElyYIBrmxamcCQsA4YSNbLX65rTm1KSEs73euaDsnN6rBGnsk3mLU71VZ+gCuaOsGsP4mloK8VYiDhoq0ealgeBZyVgUjFXma924oAdx+yNtEp0KtaJAy18NDZ8jqLLucGNKtUGLzcw+Ibu3e5qFKeoawH0ab0Qw7JzKSRlHR4PNHQwIdmzVY3EN9ffMPlcjAmBvY31qPGYR4Ssj5IcfplIRqjUdhaamSJCebSCT/AUMOOj6dTlVh1nHrlMiqL/hzUu3apCafJ9oJme0yX9o00wtGgvIUO8kJeHPbi9TQOsQS0bsNV0ZWbPPBTVGMgAtepdAtRtQfdjLRBTCzKFFFa1jDNC1i6F8Vec3/ne5muNzhNPC2QWP580TRAIsDoExeIIpwcJFeWXEIafBzAsJjpObST47yqk7Xy5dlAHnS90zwOB+2QZpRKPl05CSkO/+JXkgz5Jsnlc3gNaxZvYFB3rynClBtInp9G+H8tXeQWjH5v5IE/U8d0eUdN9lhjDg4795teB+8PNc0jvIIyJ8xpAV8Q8jjcNf2IByQX3iNQj5/XdeHgxdDdsb0zmfNmQAPwlXkp0J8ze92/GB6BBp1iTMoBx'
-            },
-            data: data
-            }).then(function(response){
-             
-                      console.log(response);                 
-          
-            });
-       
-           
-  }
-  handleChange() {
-      
-  }
-
-  render() {
-    return (
-            <div>
-       <button onClick={this.handleClick}>{this.asdf}</button>
-       </div>
-    );
-  }
-}
-//
-ReactDOM.render(<TestApi />,document.getElementById('modal_test'));
-
-        
-
-
-
-//{this.props.listRadioStuff} is ow to get the old list tiems in imput name div
-//   var conditionId = document.getElementById("new_check").checked ? 1000 : 3000;
-//    var categoryId = document.getElementById("foil_check").checked ? 49181 : 38292;
-
-//could probably delete this
-//class CardSetDiv extends React.Component {
-//  constructor(props) {
-//    super(props);
-//    
-//    this.buttonClass="btn btn-danger";
-//    this.divClass="setDiv col-sm-4";
-//    
-//    
-//    this.state = {isToggleOn: true};
-//    
-//    this.handleClick = this.handleClick.bind(this);
-//    this.handleChange = this.handleChange.bind(this);
-//    
-//  }
-//
-//  handleClick() {
-//      
-//      this.setState(prevState => ({
-//      isToggleOn: !prevState.isToggleOn
-//    }));
-//       
-//    if(this.buttonClass==="btn btn-danger"){
-//        this.buttonClass="btn btn-success";
-//        this.divClass="setDiv2 col-sm-4";
-//    }else{
-//        this.buttonClass="btn btn-danger";
-//        this.divClass="setDiv col-sm-4";
-//    }
-//           
-//  }
-//  handleChange() {
-//      
-//  }
-//
-//  render() {
-//    return (
-//       <div className={this.divClass}>
-//       <button data-internalset={this.props.setsFull} className={this.buttonClass} onClick={this.handleClick}>
-//        {this.state.isToggleOn ? 'X' : '------------->'}
-//      </button>
-//      
-//      {this.props.sets}
-//      
-//      
-//        </div>
-//    );
-//  }
-//}

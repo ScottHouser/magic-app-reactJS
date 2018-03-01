@@ -25,6 +25,7 @@
 #asdf{
     border-color:#6ad5e8;
     border-width:2px;
+    
 }
 
 #main_div{
@@ -54,7 +55,7 @@
 }
 
 .search_bar_div{
-    width:1000px;
+    width:485px;
     margin-bottom:8px;
     margin-top:8px;
     background-color:white;
@@ -71,11 +72,13 @@
     margin-top:30px;
     background-color:#6ad5e8;
     border-color:#6ad5e8;
+    
 }
 #url_shortener{
     
     background-color:#6ad5e8;
     border-color:#6ad5e8;
+    box-shadow: 1px 1px 1px 1px #888888;
 }
 
 #left_list{
@@ -198,10 +201,12 @@ h6{
     float:right;
     background-color:#ff9999;
     border-color:#ff9999;
+    box-shadow: 1px 1px 1px 1px #888888;
 }
 #sell_button2,#test_sell{
     background-color:#6ad5e8;
     border-color:#6ad5e8;
+    box-shadow: 1px 1px 1px 1px #888888;
 }
 
 .selected{
@@ -217,12 +222,21 @@ h6{
             border-width:2px;
             }
 #seach_span3,#seach_span4,#seach_span5,#modal_name_div,#modal_quant_div,#modal_price_div,#modal_pic_url{
-            background-color:white;
-            border-color:#6ad5e8; 
+           background-color:white;
+            border-color:white; 
+            box-shadow: 1px 1px 1px 1px #888888;
             
+            }
+            #modal_quant_div,#modal_name_div,#modal_price_div,#modal_pic_url{
+                background-color:white;
+                box-shadow: 1px 1px 1px 1px #888888;
+            }
+            #modal_price_div,#seach_span5,#modal_pic_url{
+                margin-bottom: 10px;
             }
             .modal-header{
                 background-color: #edeff2;
+                
             }
             
             #modal_body_id{
@@ -239,6 +253,9 @@ h6{
             #seach_span{
                
                 background-color:white;
+            }
+            .input-group{
+                margin-top: 10px;
             }
             
             
