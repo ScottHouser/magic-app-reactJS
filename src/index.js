@@ -205,7 +205,7 @@ class BigModal extends React.Component {
           ReactDOM.render(<div><center>Sale Aborted</center></div>,document.getElementById('test_div'));
       }
       if(e.target.id==='state_check'){
-          console.log(this.state);
+          this.checkForStuff();
       }
      
       if(e.target.id==='sell_button2'){
@@ -339,6 +339,28 @@ class BigModal extends React.Component {
             });
     }
   }
+//  checkForStuff() {
+//    //this will be working api
+//   var data={data:'sdf'};
+//        
+//    axios({
+//        method: 'post',
+//        url: 'http://svcs.ebay.com/services/search/FindingService/v1',
+//            headers:{
+//                'X-EBAY-API-COMPATIBILITY-LEVEL': '1019',
+//                'X-EBAY-API-CALL-NAME': 'AddItem',
+//                'X-EBAY-API-SITEID': '0',
+//                'X-EBAY-API-DETAIL-LEVEL': 0,
+//                'X-EBAY-API-IAF-TOKEN': configs.default.ebayAuth
+//            },
+//            data: data
+//            }).then(function(response){
+//             
+//                      console.log(response);                 
+//          
+//            });
+//    
+//  }
   sell(){
       
       var makeEbayCallJson = function (title, description, startPrice, picURL, conditionId, CategoryId) {
@@ -454,6 +476,7 @@ class BigModal extends React.Component {
         <div id='modal_foot_test_div'>
         
         <button onClick={this.handleClick} id='sell_button2' className="btn btn-primary">SELL!</button>
+        
         
         <button onClick={this.handleClick} id='delete_modal' className="btn btn-danger">Delete and Close</button>
         
@@ -593,3 +616,35 @@ class SVGmaker extends React.Component {
 }
 
 
+//<button onClick={this.handleClick} id='state_check' className="btn btn-primary">fdsdsfafdfd!</button> 
+
+
+//reduce dom access, no with keyword, reduce activity in loops
+
+//---------------------------------------------------------------
+//THIS IS HOW MAKE OBJECT
+//var person = new Object();
+//person.x='adsf'
+//console.log(person);
+//---------------------------------------------------------------
+//function f(x){
+//		x+=1;
+//}
+//
+//function g(x){
+//		x.value*=5;
+//}
+//
+//var a;
+//var b=1;
+//var c={value:2};
+//var d= c;
+//
+//f(a);
+//f(b);
+//g(d);
+
+//console.log(a,b,c.value,d.value);
+
+//undefined,one, ten, ten
+//-------------------------------------------------
